@@ -1,0 +1,23 @@
+{
+  "name": "@modernice/typed-response",
+  "version": "0.1.0",
+  "description": "Automatic types for JSON APIs",
+  "keywords": [
+    "api",
+    "response",
+    "typed",
+    "typed-response",
+    "typescript",
+    "json",
+    "json-response"
+  ],
+  "license": "MIT",
+  "author": "Saman Hosseini <saman@modernice.ltd>",
+  "types": "index.d.ts",
+  "scripts": {
+    "test": "tsd"
+  },
+  "devDependencies": {
+    "tsd": "^0.22.0"
+  }
+}
