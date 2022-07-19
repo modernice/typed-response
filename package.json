@@ -14,6 +14,7 @@
   "license": "MIT",
   "author": "Saman Hosseini <saman@modernice.ltd>",
   "types": "index.d.ts",
+  "private": false,
   "scripts": {
     "test": "tsd"
   },
