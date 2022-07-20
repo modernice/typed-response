@@ -112,7 +112,7 @@ type ReplaceTypes<
   : T extends undefined
   ? ReplaceTypes<TNotUndefined> | undefined
   : TStrict extends string
-  ? string
+  ? TStrict
   : TStrict extends Date
   ? string
   : TStrict extends number

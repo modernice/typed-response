@@ -59,6 +59,30 @@ expectType<MappedResponse>({
   tuple: [1577836800000, 'foo', '9'],
 })
 
+type ABC = 'A' | 'B' | 'C'
+
+type UnionTest = {
+  foo: ABC
+  bar?: ABC
+  baz: ABC | null
+  foobar?: ABC | null
+}
+
+type UnionTestResp = ResponseOf<UnionTest>
+
+function toUnionTest(data: UnionTestResp): UnionTest {
+  return data
+}
+
+expectType<UnionTestResp>(
+  toUnionTest({
+    foo: 'A',
+    bar: 'B',
+    baz: 'C',
+    foobar: 'B',
+  })
+)
+
 expectType<ResponseOf<number>>(5 as number)
 expectType<ResponseOf<string>>('foo' as string)
 expectType<ResponseOf<Date>>('2020-01-01T00:00:00.000Z' as string)
