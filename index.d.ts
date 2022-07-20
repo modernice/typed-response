@@ -210,14 +210,9 @@ type PickOptionalPropertiesObject<T> = {
   [P in OptionalKeys<T>]: T[P]
 }
 
-type PickRequiredProperties<T> = T extends Primitive
-  ? T
-  : T extends Array<infer U>
-  ? PickRequiredPropertiesArray<U>
-  : PickRequiredPropertiesObject<T>
-
-interface PickRequiredPropertiesArray<T>
-  extends ReadonlyArray<PickRequiredProperties<T>> {}
+type PickRequiredProperties<T> = T extends Record<string, unknown>
+  ? PickRequiredPropertiesObject<T>
+  : T
 
 type PickRequiredPropertiesObject<T> = {
   [P in RequiredKeys<T>]: T[P]
