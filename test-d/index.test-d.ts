@@ -1,5 +1,5 @@
 import { expectType } from 'tsd'
-import { ResponseOf } from '.'
+import { ResponseOf } from '../dist/index'
 
 type Person = {
   name: string
