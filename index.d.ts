@@ -11,7 +11,7 @@
  * ### Default mapping
  *
  * By default, `ResponseOf<T>` recursively replaces {@link Date} with `string`
- * and nothing more.
+ * and does nothing more.
  *
  * ```ts
  * type Foo = {
@@ -98,27 +98,30 @@
 export type ResponseOf<
   T,
   CustomMapping = T extends Mappable ? Mapping<T> : never,
-  ActualMapping = CustomMapping extends never ? {} : CustomMapping
-> = T extends string
+  ActualMapping = [CustomMapping] extends never ? {} : CustomMapping,
+  Unmapped = ReplaceTypes<T, CustomMapping>
+> = ApplyMapping<ActualMapping, Unmapped>
+
+type ReplaceTypes<
+  T,
+  TNotNull = Exclude<T, null>,
+  TNotUndefined = Exclude<T, undefined>,
+  TStrict = Exclude<T, null | undefined>
+> = T extends null
+  ? ReplaceTypes<TNotNull> | null
+  : T extends undefined
+  ? ReplaceTypes<TNotUndefined> | undefined
+  : TStrict extends string
   ? string
-  : T extends Date
+  : TStrict extends Date
   ? string
-  : T extends number
-  ? T
-  : T extends boolean
-  ? T
-  : T extends Mappable
-  ? ApplyMapping<
-      ActualMapping,
-      {
-        [K in keyof T]: null extends T[K]
-          ? T[K] extends Date | null
-            ? string
-            : ResponseOf<T[K]> | undefined
-          : ResponseOf<T[K]>
-      }
-    >
-  : string
+  : TStrict extends number
+  ? TStrict
+  : TStrict extends boolean
+  ? TStrict
+  : TStrict extends Mappable
+  ? { [K in keyof TStrict]: ReplaceTypes<TStrict[Exclude<K, undefined>]> }
+  : any
 
 /**
  * Mappings of the properties of `T` to custom types.
@@ -127,38 +130,99 @@ export type Mapping<T extends Mappable> = { [key in keyof T]?: any }
 
 /**
  * Applies the given {@link Mapping} to `T`. `T` must be an object of type
- * `{ [key: string]: string }` / `Record<string, string>`.
+ * `Record<string, unknown>`.
  */
-export type ApplyMapping<M extends Mapping<T>, T extends Mappable> = {
-  [K in keyof T]: ApplyMappingTo<M, T, K>
+export type ApplyMapping<
+  M extends Mapping<T>,
+  T extends Mappable
+> = T extends Record<string, unknown>
+  ? Expand<ApplyOptionalMapping<M, T> & ApplyRequiredMapping<M, T>>
+  : T
+
+type ApplyOptionalMapping<M extends Mapping<T>, T extends Mappable> = {
+  [K in keyof PickOptionalProperties<T> as undefined extends ApplyMappingToProperty<
+    M,
+    T,
+    string & K
+  >
+    ? K
+    : never]?: ApplyMappingToProperty<M, T, string & K>
+} & {
+  [K in keyof PickOptionalProperties<T> as undefined extends ApplyMappingToProperty<
+    M,
+    T,
+    string & K
+  >
+    ? never
+    : K]: ApplyMappingToProperty<M, T, string & K>
 }
 
-type ApplyMappingTo<
-  M extends Mapping<T>,
-  T extends Mappable,
-  K extends keyof T,
-  IsMappable = T[K] extends Mappable ? true : false, // check if `T[K]` is mappable, but not an array or tuple
-  IsMappableObject = T[K] extends Mappable
-    ? T[K] extends [...any]
-      ? false
-      : true
-    : false, // check if `T[K]` is an object
-  SubMapping = true extends IsMappable // if `T[K]` is mappable, extract its sub-mapping `M[K]`
-    ? unknown extends M[K]
+type ApplyRequiredMapping<M extends Mapping<T>, T extends Mappable> = {
+  [K in keyof PickRequiredProperties<T> as undefined extends ApplyMappingToProperty<
+    M,
+    T,
+    string & K
+  >
+    ? never
+    : K]: ApplyMappingToProperty<M, T, string & K>
+}
+
+type ApplyMappingToProperty<
+  Map extends Mapping<Obj>,
+  Obj extends Mappable,
+  Prop extends keyof Obj,
+  ValueIsMappable = Obj[Prop] extends Mappable ? true : false,
+  ValueIsArray = Obj[Prop] extends Array<unknown> ? true : false,
+  SubMapping = true extends ValueIsMappable
+    ? unknown extends Map[Prop]
       ? {}
-      : M[K]
-    : never, // otherwise set it to `never`
-  // if AppliedSubMapping is not `never`, then `T[K]` is mappable (object)
-  AppliedSubMapping = SubMapping extends never // if `SubMapping` is `never`,
-    ? never // set it to `never`
-    : ApplyMapping<SubMapping, T[K]> // otherwise apply `SubMapping` to `T[K]`
-  // AppliedArrayMapping = T[K] extends [...infer TT] ? ApplyMapping<M, TT> : never
-> = unknown extends M[K] // if no mapping is defined for `T[K]`,
-  ? T[K] // we return the original type `T[K]`
-  : true extends IsMappableObject // otherwise, if `T[K]` is also mappable, but not an array or tuple
-  ? AppliedSubMapping // return the applied sub-mapping of `T[K]`
-  : // we now know that the mapping `M[K]` is defined for `T[K]` and that `T[K]`
-    // is a primitive or array/tuple, so we just return the mapping `M[K]`
-    M[K]
+      : Map[Prop]
+    : never,
+  AppliedSubMapping = ApplyMapping<SubMapping, Obj[Prop]>
+> = unknown extends Map[Prop]
+  ? Obj[Prop]
+  : false extends ValueIsMappable
+  ? Map[Prop]
+  : true extends ValueIsArray
+  ? Map[Prop]
+  : AppliedSubMapping
 
 type Mappable = Record<string, any>
+
+type OptionalKeys<T> = {
+  [K in keyof T]-?: {} extends Pick<T, K> ? K : never
+}[keyof T]
+
+type RequiredKeys<T> = Exclude<keyof T, OptionalKeys<T>>
+
+type Primitive = string | number | boolean | undefined | null
+
+type PickOptionalProperties<T> = T extends Primitive
+  ? T
+  : T extends Array<infer U>
+  ? PickOptionalPropertiesArray<U>
+  : PickOptionalPropertiesObject<T>
+
+interface PickOptionalPropertiesArray<T>
+  extends ReadonlyArray<PickOptionalProperties<T>> {}
+
+type PickOptionalPropertiesObject<T> = {
+  [P in OptionalKeys<T>]: T[P]
+}
+
+type PickRequiredProperties<T> = T extends Primitive
+  ? T
+  : T extends Array<infer U>
+  ? PickRequiredPropertiesArray<U>
+  : PickRequiredPropertiesObject<T>
+
+interface PickRequiredPropertiesArray<T>
+  extends ReadonlyArray<PickRequiredProperties<T>> {}
+
+type PickRequiredPropertiesObject<T> = {
+  [P in RequiredKeys<T>]: T[P]
+}
+
+type Expand<T> = T extends Record<string, unknown>
+  ? { [K in keyof T]: Expand<T[K]> }
+  : T
