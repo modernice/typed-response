@@ -79,7 +79,7 @@
  * ```
  *
  * Given the example above, we can write a strongly-typed `hydratePerson`
- * function that converts an JSON response to a `Person`:
+ * function that converts a JSON response to a `Person`:
  *
  * ```ts
  * function hydratePerson(data: ResponseOf<Person, Mapping>): Person {
