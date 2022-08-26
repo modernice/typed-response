@@ -95,47 +95,42 @@
  * }
  * ```
  */
-export type ResponseOf<
-  T,
-  CustomMapping = T extends Mappable ? Mapping<T> : never,
-  ActualMapping = [CustomMapping] extends [never] ? {} : CustomMapping,
-  Unmapped = ReplaceTypes<T, CustomMapping>
-> = Unmapped extends Mappable ? ApplyMapping<ActualMapping, Unmapped> : Unmapped
+export type ResponseOf<T, CustomMapping extends Mapping<T> = never> = [
+  CustomMapping
+] extends [never]
+  ? ReplacePrimitives<T, CustomMapping>
+  : ApplyMapping<CustomMapping, ReplacePrimitives<T, CustomMapping>>
 
-type ReplaceTypes<
+type ReplacePrimitives<
   T,
   TNotNull = Exclude<T, null>,
   TNotUndefined = Exclude<T, undefined>,
   TStrict = Exclude<T, null | undefined>
 > = T extends null
-  ? ReplaceTypes<TNotNull> | null
+  ? ReplacePrimitives<TNotNull> | null
   : T extends undefined
-  ? ReplaceTypes<TNotUndefined> | undefined
-  : TStrict extends string
+  ? ReplacePrimitives<TNotUndefined> | undefined
+  : TStrict extends string | number | boolean
   ? TStrict
   : TStrict extends Date
   ? string
-  : TStrict extends number
-  ? TStrict
-  : TStrict extends boolean
-  ? TStrict
-  : TStrict extends Mappable
-  ? { [K in keyof TStrict]: ReplaceTypes<TStrict[Exclude<K, undefined>]> }
-  : any
+  : [TStrict] extends [Mappable]
+  ? { [K in keyof TStrict]: ReplacePrimitives<TStrict[Exclude<K, undefined>]> }
+  : unknown
 
 /**
  * Mappings of the properties of `T` to custom types.
  */
-export type Mapping<T extends Mappable> = { [key in keyof T]?: any }
+export type Mapping<T> = { [key in keyof T]?: any }
 
 /**
  * Applies the given {@link Mapping} to `T`. `T` must be an object of type
  * `Record<string, unknown>`.
  */
-export type ApplyMapping<
-  M extends Mapping<T>,
-  T extends Mappable
-> = T extends Record<string, unknown>
+export type ApplyMapping<M extends Mapping<T>, T> = T extends Record<
+  string,
+  unknown
+>
   ? Expand<ApplyOptionalMapping<M, T> & ApplyRequiredMapping<M, T>>
   : T
 
