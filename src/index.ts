@@ -98,9 +98,9 @@
 export type ResponseOf<
   T,
   CustomMapping = T extends Mappable ? Mapping<T> : never,
-  ActualMapping = [CustomMapping] extends never ? {} : CustomMapping,
+  ActualMapping = [CustomMapping] extends [never] ? {} : CustomMapping,
   Unmapped = ReplaceTypes<T, CustomMapping>
-> = ApplyMapping<ActualMapping, Unmapped>
+> = Unmapped extends Mappable ? ApplyMapping<ActualMapping, Unmapped> : Unmapped
 
 type ReplaceTypes<
   T,

@@ -3,10 +3,12 @@ lockfileVersion: 5.4
 specifiers:
   siroc: ^0.16.0
   tsd: ^0.22.0
+  typescript: ^4.8.2
 
 devDependencies:
   siroc: 0.16.0
   tsd: 0.22.0
+  typescript: 4.8.2
 
 packages:
 
@@ -1024,7 +1026,7 @@ packages:
       kind-of: 6.0.3
     dev: true
 
-  /mkdist/0.3.13_typescript@4.7.4:
+  /mkdist/0.3.13_typescript@4.8.2:
     resolution: {integrity: sha512-+eCPpkr8l2X630y5PIlkts2tzYEsb+aGIgXdrQv9ZGtWE2bLlD6kVIFfI6FJwFpjjw4dPPyorxQc6Uhm/oXlvg==}
     hasBin: true
     peerDependencies:
@@ -1040,7 +1042,7 @@ packages:
       jiti: 1.14.0
       mri: 1.2.0
       pathe: 0.2.0
-      typescript: 4.7.4
+      typescript: 4.8.2
     dev: true
 
   /mri/1.2.0:
@@ -1206,7 +1208,7 @@ packages:
     engines: {iojs: '>=1.0.0', node: '>=0.10.0'}
     dev: true
 
-  /rollup-plugin-dts/3.0.2_55kiftncucr43pz4hskma6yi2q:
+  /rollup-plugin-dts/3.0.2_3ovunycq54yly6uix3e77yk3bq:
     resolution: {integrity: sha512-hswlsdWu/x7k5pXzaLP6OvKRKcx8Bzprksz9i9mUe72zvt8LvqAb/AZpzs6FkLgmyRaN8B6rUQOVtzA3yEt9Yw==}
     engines: {node: '>=v12.22.1'}
     peerDependencies:
@@ -1215,7 +1217,7 @@ packages:
     dependencies:
       magic-string: 0.25.9
       rollup: 2.77.0
-      typescript: 4.7.4
+      typescript: 4.8.2
     optionalDependencies:
       '@babel/code-frame': 7.18.6
     dev: true
@@ -1296,12 +1298,12 @@ packages:
       fs-extra: 10.1.0
       glob: 7.2.3
       jiti: 1.14.0
-      mkdist: 0.3.13_typescript@4.7.4
+      mkdist: 0.3.13_typescript@4.8.2
       rollup: 2.77.0
-      rollup-plugin-dts: 3.0.2_55kiftncucr43pz4hskma6yi2q
+      rollup-plugin-dts: 3.0.2_3ovunycq54yly6uix3e77yk3bq
       rollup-plugin-esbuild: 4.5.0_hqhnu5rv3shazeihaexvffovbm
       sort-package-json: 1.57.0
-      typescript: 4.7.4
+      typescript: 4.8.2
       upath: 2.0.1
       v8-compile-cache: 2.3.0
     dev: true
@@ -1453,8 +1455,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /typescript/4.7.4:
-    resolution: {integrity: sha512-C0WQT0gezHuw6AdY1M2jxUO83Rjf0HP7Sk1DtXj6j1EwkQNZrHAg2XPWlq62oqEhYvONq5pkC2Y9oPljWToLmQ==}
+  /typescript/4.8.2:
+    resolution: {integrity: sha512-C0I1UsrrDHo2fYI5oaCGbSejwX4ch+9Y5jTQELvovfmFkK3HHSZJB8MSJcWLmCUBzQBchCrZ9rMRV6GuNrvGtw==}
     engines: {node: '>=4.2.0'}
     hasBin: true
     dev: true
