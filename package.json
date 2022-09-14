@@ -12,7 +12,6 @@
     "json",
     "json-response"
   ],
-  "files": ["dist"],
   "license": "MIT",
   "author": "Saman Hosseini <saman@modernice.ltd>",
   "exports": {
@@ -24,6 +23,9 @@
   "main": "./dist/index.js",
   "module": "./dist/index.es.js",
   "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "siroc",
     "test": "tsd"

@@ -114,10 +114,8 @@ type ReplacePrimitives<
   ? TStrict
   : TStrict extends Date
   ? string
-  : [TStrict] extends [Mappable]
-  ? Expand<{
-      [K in keyof TStrict]: ReplacePrimitives<TStrict[Exclude<K, undefined>]>
-    }>
+  : [T] extends [Mappable]
+  ? { [K in keyof T]: ReplacePrimitives<T[Exclude<K, undefined>]> }
   : unknown
 
 /**
