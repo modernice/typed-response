@@ -98,7 +98,7 @@
 export type ResponseOf<T, CustomMapping extends Mapping<T> = never> = [
   CustomMapping
 ] extends [never]
-  ? Expand<ReplacePrimitives<T, CustomMapping>>
+  ? ReplacePrimitives<T, CustomMapping>
   : ApplyMapping<CustomMapping, ReplacePrimitives<T, CustomMapping>>
 
 type ReplacePrimitives<
@@ -115,7 +115,9 @@ type ReplacePrimitives<
   : TStrict extends Date
   ? string
   : [TStrict] extends [Mappable]
-  ? { [K in keyof TStrict]: ReplacePrimitives<TStrict[Exclude<K, undefined>]> }
+  ? Expand<{
+      [K in keyof TStrict]: ReplacePrimitives<TStrict[Exclude<K, undefined>]>
+    }>
   : unknown
 
 /**
