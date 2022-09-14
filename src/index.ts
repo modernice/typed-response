@@ -98,7 +98,7 @@
 export type ResponseOf<T, CustomMapping extends Mapping<T> = never> = [
   CustomMapping
 ] extends [never]
-  ? ReplacePrimitives<T, CustomMapping>
+  ? Expand<ReplacePrimitives<T, CustomMapping>>
   : ApplyMapping<CustomMapping, ReplacePrimitives<T, CustomMapping>>
 
 type ReplacePrimitives<
