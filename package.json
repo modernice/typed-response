@@ -16,6 +16,7 @@
   "author": "Saman Hosseini <saman@modernice.ltd>",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "require": "./dist/index.js",
       "import": "./dist/index.es.js"
     }
