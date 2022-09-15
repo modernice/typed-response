@@ -1,6 +1,6 @@
 {
   "name": "@modernice/typed-response",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "private": false,
   "description": "Automatic types for JSON APIs",
   "keywords": [
