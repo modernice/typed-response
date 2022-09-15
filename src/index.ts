@@ -1,3 +1,5 @@
+export {}
+
 /**
  * `ResponseOf<T>` is the type `T`, normalized to primitive types that are
  * supported by JSON.

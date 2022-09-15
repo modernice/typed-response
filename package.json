@@ -17,24 +17,24 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "require": "./dist/index.js",
-      "import": "./dist/index.es.js"
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
     }
   },
-  "main": "./dist/index.js",
-  "module": "./dist/index.es.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "siroc",
+    "build": "unbuild",
     "test": "tsd"
   },
   "devDependencies": {
-    "siroc": "^0.16.0",
     "tsd": "^0.22.0",
-    "typescript": "^4.8.2"
+    "typescript": "^4.8.2",
+    "unbuild": "^0.8.11"
   },
   "publishConfig": {
     "access": "public"
